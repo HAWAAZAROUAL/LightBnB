@@ -40,7 +40,14 @@ exports.getUserWithEmail = getUserWithEmail;
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithId = function(id) {
-  return Promise.resolve(users[id]);
+  return pool
+  .query(`SELECT * FROM users
+  WHERE email = $1, [email]`)
+  .then(result => {
+    if (result.rows[0]) return result.rows[0];
+    else return null;
+    })
+    .catch(err => console.log(err.message));
 }
 exports.getUserWithId = getUserWithId;
 
